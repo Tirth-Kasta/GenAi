@@ -5,6 +5,7 @@ require('dotenv').config();
 const app = require('./src/app')
 const PORT = process.env.PORT
 const connectDB = require('./src/config/db');
+const invokeGeminiAI = require('./src/services/ai.service');
 
 
 const startServer = async () => {
