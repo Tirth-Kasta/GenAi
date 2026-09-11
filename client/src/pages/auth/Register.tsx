@@ -1,13 +1,30 @@
-import { Link } from "react-router";
+import { useState } from "react";
+import { Link, Navigate, useNavigate } from "react-router";
+import { useAuth } from "../../hooks/useAuth";
+import Loading from "../loading/Loading";
 
 const Register = () => {
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+
+    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const navigate = useNavigate()
+    const { user, loading, handleRegister } = useAuth();
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        await handleRegister({ username, email, password });
+        navigate("/");
     }
 
-
-
-
+    if (loading) {
+        return (
+            <Loading />
+        );
+    }
+    if (user) {
+        return <Navigate to="/" replace />;
+    }
 
     return (
         <main className="flex min-h-screen w-full items-center justify-center bg-[radial-gradient(circle_at_top,#243047_0%,#161616_48%)] px-4">
@@ -34,6 +51,7 @@ const Register = () => {
                             name="username"
                             placeholder="Enter username"
                             required
+                            onChange={(e) => { setUsername(e.target.value) }}
                         />
                     </div>
                     <div className="flex flex-col gap-2">
@@ -47,6 +65,7 @@ const Register = () => {
                             name="email"
                             placeholder="you@example.com"
                             required
+                            onChange={(e) => { setEmail(e.target.value) }}
                         />
                     </div>
 
@@ -61,6 +80,7 @@ const Register = () => {
                             name="password"
                             placeholder="Enter your password"
                             required
+                            onChange={(e) => { setPassword(e.target.value) }}
                         />
                     </div>
 

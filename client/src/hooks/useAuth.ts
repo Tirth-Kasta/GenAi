@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext } from "../context/auth.context";
 import { register, login, logout, getMe } from "../API/auth.api"
 import type { User } from "../interfaces/auth.interface";
@@ -14,10 +14,6 @@ export const useAuth = () => {
     }
 
     const { user, setUser, loading, setLoading } = context
-
-
-
-
 
     const handleLogin = async ({ email, password }: User) => {
         setLoading(true);
@@ -51,7 +47,7 @@ export const useAuth = () => {
                 ? error.response?.data?.message
                 : undefined;
 
-            toast.error(message || "Unable to log in. Please try again.");
+            toast.error(message || "Unable to register. Please try again.");
         }
         finally {
             setLoading(false);
@@ -77,26 +73,21 @@ export const useAuth = () => {
         }
     }
 
-    const handleMe = async () => {
-        setLoading(true);
-        try {
-            const data = await getMe();
-            console.log(data.data);
-            setUser(data);
+    useEffect(() => {
+        const getUser = async () => {
+            try {
+                const data = await getMe();
+                setUser(data.data);
+            } catch {
+                setUser(null);
+            } finally {
+                setLoading(false);
+            }
         }
-        catch (error) {
-            const message = isAxiosError(error)
-                ? error.response?.data?.message
-                : undefined;
+        void getUser()
+    }, [setUser, setLoading])
 
-            toast.error(message || "Unable to log in. Please try again.");
-        }
-        finally {
-            setLoading(false);
-        }
-    }
-
-    return { user, loading, handleLogin, handleRegister, handleLogout, handleMe }
+    return { user, loading, handleLogin, handleRegister, handleLogout }
 
 }
 

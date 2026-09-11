@@ -30,10 +30,6 @@ export const logout = async () => {
 }
 
 export const getMe = async () => {
-    try {
-        const response = await api.post("/api/auth/me");
-        return response.data;
-    } catch (error) {
-        console.log(error)
-    }
+    const response = await api.get("/api/auth/me");
+    return response.data;
 }

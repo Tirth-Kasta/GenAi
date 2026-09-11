@@ -1,33 +1,30 @@
-import { Link } from "react-router";
+import { Link, Navigate, useNavigate } from "react-router";
 import { useAuth } from "../../hooks/useAuth";
 import { useState } from "react";
+import Loading from "../loading/Loading";
+
 
 const Login = () => {
 
-    const { loading, handleLogin } = useAuth()
+    const { user, loading, handleLogin } = useAuth()
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
-
-
-
+    const navigate = useNavigate()
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         await handleLogin({ email, password });
+        navigate("/");
     }
-
 
     if (loading) {
         return (
-            <main className="flex min-h-screen items-center justify-center">
-                <div className="flex items-center gap-2">
-                    <span className="h-3 w-3 animate-bounce rounded-full bg-blue-600"></span>
-                    <span className="h-3 w-3 animate-bounce rounded-full bg-blue-600 [animation-delay:150ms]"></span>
-                    <span className="h-3 w-3 animate-bounce rounded-full bg-blue-600 [animation-delay:300ms]"></span>
-                </div>
-            </main>
+            <Loading />
         );
+    }
+
+    if (user) {
+        return <Navigate to="/" replace />;
     }
 
 
