@@ -68,4 +68,64 @@ const generateInterviewReportController = async (req, res) => {
 }
 
 
-module.exports = { generateInterviewReportController }
+const getAllReport = async (req, res) => {
+    const userId = req.user?.id;
+
+    if (!userId) {
+        return res.status(401).json({
+            success: 0,
+            message: "Unauthorised User"
+        });
+    }
+
+    try {
+        const allReportData = await interviewReportModel
+            .find({ user: userId })
+            .select("title createdAt")
+            .sort({ createdAt: -1 });
+
+        return res.status(200).json({
+            success: 1,
+            message: "Report Data",
+            data: allReportData
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            success: 0,
+            message: error.message
+        });
+    }
+};
+
+
+
+const getReport = async (req, res) => {
+    const { interviewId } = req.params
+
+    if (!interviewId) {
+        return res.status(400).json({
+            success: 0,
+            message: "No Report Found"
+        });
+    }
+
+    try {
+        const reportData = await interviewReportModel.findById({ _id: interviewId })
+        if (!reportData) {
+            return res.status(400).json({
+                success: 0,
+                message: "report not found"
+            });
+        }
+        return res.status(200).json({ success: 1, message: "Report Data", data: reportData })
+
+    } catch (error) {
+        return res.status(400).json({
+            success: 0,
+            message: error
+        });
+    }
+}
+
+module.exports = { generateInterviewReportController, getReport, getAllReport }

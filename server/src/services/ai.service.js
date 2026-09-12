@@ -36,6 +36,8 @@ const interviewReportSchema = z.object({
         focus: z.string().describe("The main preparation focus for this day"),
         tasks: z.array(z.string()).describe("The preparation tasks to complete on this day")
     })).describe("An array of preparation plans for the candidate to improve their skills"),
+
+    title:z.string().describe("The title of the interview report"),
 });
 
 const interviewReportJsonSchema = z.toJSONSchema(interviewReportSchema);

@@ -3,9 +3,6 @@ import type { User } from "../interfaces/auth.interface";
 
 
 
-
-
-
 export const register = async (userData: User) => {
     try {
         const response = await api.post("/api/auth/register", userData);

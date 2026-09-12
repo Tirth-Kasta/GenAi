@@ -2,6 +2,7 @@
 import { Navigate, Outlet } from 'react-router';
 import { useAuth } from './hooks/useAuth';
 import Loading from './pages/loading/Loading';
+import Header from './components/Header';
 
 
 const ProtectedRoutes = () => {
@@ -16,7 +17,12 @@ const ProtectedRoutes = () => {
         return <Navigate to={"/login"} replace />
     }
 
-    return <Outlet />;
+    return (
+        <div className="min-h-screen bg-[#090d12]">
+            <Header />
+            <Outlet />
+        </div>
+    );
 }
 
 export default ProtectedRoutes
